@@ -12,16 +12,14 @@
 			div{
 				margin-bottom: 2em;
 			}
+
 			h1{
 				font-size: 150%;
 			}
 		</style>
 	</head>
 	<body>
-		<h1> 联队战夜光贝计算器 </h1>
-		<div>
-			<!-- to be implemented, reward list -->
-		</div>
+		<h1> 联队战夜光貝计算器 </h1>
 
 		<div>
 
@@ -34,34 +32,57 @@
 		<div>
 			<!-- form, submit expected num, current num-->
 			<form action="">
-				已有夜光贝: 
+				已有夜光貝: 
 				<input name="curScore", type="number", value="0", min="0", max="200000">
 				枚<br>
-				目标夜光贝:
+				目标夜光貝:
 				<input name="expScore", type="number", value="100000", step="2500", min="0", max="200000">
 				枚<br>
-				<button type="button" onclick="processForm(curScore, expScore)"> 计算 </button>
+				每局夜光貝:
+				<input name="avgScore", type="number", value="600", min="0">
+				枚<br>
+				<button type="button" onclick="processForm(curScore, expScore, avgScore)"> 计算 </button>
 			</form>
-			<p>今日目标： <span id="dTarget"></span> 枚</>
+			<p>每日目标： <span id="dTarget"></span> 枚</p>
+			<p>每日场次： <span id="dRound"></span> 场</p>
 		</div>
 
 		<script>
+			const SEC_PER_HR = 3600;
+			const MILI_PER_SEC = 1000;
+			const HR_PER_DAY = 24;
 			// maintenance time -> 27th august, 13:00 JST in UTC
 			let d = new Date();
 			let endDate = new Date(Date.UTC(2019, 7, 28, 4, 0, 0));
-			document.getElementById("d").innerHTML = d;
-			document.getElementById("endDate").innerHTML = endDate;
-			let countdown = endDate.getDate() - d.getDate();
-			let countdownH = endDate.getHours() - d.getHours();
-			document.getElementById("dayCounts").innerHTML = countdown + " days " + countdownH + " hrs";
-			// toFixed, more options to be implemented
-			if(countdownH > 12) countdown++;
+			document.getElementById("d").innerHTML = formatDate(d);
+			document.getElementById("endDate").innerHTML = formatDate(endDate);
+			let countdown = calcDate(d, endDate);
+			document.getElementById("dayCounts").innerHTML = countdown;
+			let daysLeft = -1;
+			if (countdown.slice(-2)!=="00")
+				daysLeft = parseInt(countdown) + 1;
+			else
+				daysLeft = parseInt(countdown);
 
-			function processForm(currentScore, expectedScore){
+			function calcDate(d, endDate){
+				let countdown = endDate - d;
+				countdown = countdown/MILI_PER_SEC/SEC_PER_HR/HR_PER_DAY;
+				let result = Math.floor(countdown);
+				result = result + "日 " + ((countdown - result) * HR_PER_DAY).toFixed(0) + "时";
+				return result;
+			}
+
+			function formatDate(d){
+				let result = d.getMonth() + 1 + "月" + d.getDate() + "日  " + ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2);
+				return result;
+			}
+
+			function processForm(currentScore, expectedScore, avgScore){
 				let curScore = currentScore.value;
 				let expScore = expectedScore.value;
-				let dailyTarget = (expScore-curScore)/countdown;
+				let dailyTarget = (expScore-curScore)/daysLeft;
 				document.getElementById("dTarget").innerHTML = dailyTarget.toFixed(0);
+				document.getElementById("dRound").innerHTML = (dailyTarget/avgScore.value).toFixed(0);
 			}
 		</script>
 
