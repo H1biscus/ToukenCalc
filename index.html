@@ -7,14 +7,12 @@
 			body{
 				font-family:PMingLiU;
 				text-align: center;
+				background-color: #ece0b8;
 			}
 
 			div{
 				margin-bottom: 2em;
-			}
-
-			h1{
-				font-size: 150%;
+				margin-top: 2em;
 			}
 		</style>
 	</head>
@@ -33,18 +31,20 @@
 			<!-- form, submit expected num, current num-->
 			<form action="">
 				已有夜光貝: 
-				<input name="curScore", type="number", value="0", min="0", max="200000">
+				<input name="curScore", type="number", value="0", min="0">
 				枚<br>
 				目标夜光貝:
-				<input name="expScore", type="number", value="100000", step="2500", min="0", max="200000">
+				<input name="expScore", type="number", value="100000", step="2500", min="0">
 				枚<br>
 				每局夜光貝:
 				<input name="avgScore", type="number", value="600", min="0">
 				枚<br>
 				<button type="button" onclick="processForm(curScore, expScore, avgScore)"> 计算 </button>
 			</form>
-			<p>每日目标： <span id="dTarget"></span> 枚</p>
-			<p>每日场次： <span id="dRound"></span> 场</p>
+			<p>每日目标： <span id="dTarget">??</span> 枚</p>
+			<p>每日场次： <span id="dRound">??</span> 场</p>
+			<div id="resultDisplay">
+			</div>
 		</div>
 
 		<script>
@@ -81,8 +81,17 @@
 				let curScore = currentScore.value;
 				let expScore = expectedScore.value;
 				let dailyTarget = (expScore-curScore)/daysLeft;
-				document.getElementById("dTarget").innerHTML = dailyTarget.toFixed(0);
-				document.getElementById("dRound").innerHTML = (dailyTarget/avgScore.value).toFixed(0);
+
+				if(dailyTarget > 0) {
+					document.getElementById("dTarget").innerHTML = dailyTarget.toFixed(0);
+					document.getElementById("dRound").innerHTML = (dailyTarget/avgScore.value).toFixed(0);
+					document.getElementById("resultDisplay").innerHTML = "";
+				}
+				else{
+					document.getElementById("dTarget").innerHTML = 0;
+					document.getElementById("dRound").innerHTML = 0;
+					document.getElementById("resultDisplay").innerHTML = "肝完啦！请大佬喝茶！  皿=(ᐛ ❁)و";
+				}
 			}
 		</script>
 
