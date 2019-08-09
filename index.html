@@ -52,18 +52,20 @@
 			const MILI_PER_SEC = 1000;
 			const HR_PER_DAY = 24;
 			// maintenance time -> 27th august, 13:00 JST in UTC
-			let d = new Date();
-			let endDate = new Date(Date.UTC(2019, 7, 28, 4, 0, 0));
+			let d = new Date();																	// d: current date
+			let endDate = new Date(Date.UTC(2019, 7, 28, 4, 0, 0));								// endDate: end date
 			document.getElementById("d").innerHTML = formatDate(d);
 			document.getElementById("endDate").innerHTML = formatDate(endDate);
 			let countdown = calcDate(d, endDate);
 			document.getElementById("dayCounts").innerHTML = countdown;
 			let daysLeft = -1;
-			if (countdown.slice(-2)!=="00")
+			// checking if the remaining hours is sufficient for a new game
+			if (parseInt(countdown.split(" ")[1]) > 1)
 				daysLeft = parseInt(countdown) + 1;
 			else
 				daysLeft = parseInt(countdown);
 
+			// return a string, dd hr
 			function calcDate(d, endDate){
 				let countdown = endDate - d;
 				countdown = countdown/MILI_PER_SEC/SEC_PER_HR/HR_PER_DAY;
@@ -77,6 +79,7 @@
 				return result;
 			}
 
+			// process form values and update results on page
 			function processForm(currentScore, expectedScore, avgScore){
 				let curScore = currentScore.value;
 				let expScore = expectedScore.value;
@@ -84,7 +87,7 @@
 
 				if(dailyTarget > 0) {
 					document.getElementById("dTarget").innerHTML = dailyTarget.toFixed(0);
-					document.getElementById("dRound").innerHTML = (dailyTarget/avgScore.value).toFixed(0);
+					document.getElementById("dRound").innerHTML = Math.ceil(dailyTarget/avgScore.value);
 					document.getElementById("resultDisplay").innerHTML = "";
 				}
 				else{
