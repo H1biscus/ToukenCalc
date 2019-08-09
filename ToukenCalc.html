@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title> Touken Calculator</title>
+		<style>
+			body{
+				font-family:PMingLiU;
+				text-align: center;
+			}
+
+			div{
+				margin-bottom: 2em;
+			}
+			h1{
+				font-size: 150%;
+			}
+		</style>
+	</head>
+	<body>
+		<h1> 联队战夜光贝计算器 </h1>
+		<div>
+			<!-- to be implemented, reward list -->
+		</div>
+
+		<div>
+
+			<!-- data, automatically check current data and do countdown -->
+			<p> 当前时间 <span id="d"></span> </p>
+			<p> 活动结束日期 <span id="endDate"></span></p>
+			<p> 倒计时 <span id="dayCounts"></span></p>
+		</div>
+
+		<div>
+			<!-- form, submit expected num, current num-->
+			<form action="">
+				已有夜光贝: 
+				<input name="curScore", type="number", value="0", min="0", max="200000">
+				枚<br>
+				目标夜光贝:
+				<input name="expScore", type="number", value="100000", step="2500", min="0", max="200000">
+				枚<br>
+				<button type="button" onclick="processForm(curScore, expScore)"> 计算 </button>
+			</form>
+			<p>今日目标： <span id="dTarget"></span> 枚</>
+		</div>
+
+		<script>
+			// maintenance time -> 27th august, 13:00 JST in UTC
+			let d = new Date();
+			let endDate = new Date(Date.UTC(2019, 7, 28, 4, 0, 0));
+			document.getElementById("d").innerHTML = d;
+			document.getElementById("endDate").innerHTML = endDate;
+			let countdown = endDate.getDate() - d.getDate();
+			let countdownH = endDate.getHours() - d.getHours();
+			document.getElementById("dayCounts").innerHTML = countdown + " days " + countdownH + " hrs";
+			// toFixed, more options to be implemented
+			if(countdownH > 12) countdown++;
+
+			function processForm(currentScore, expectedScore){
+				let curScore = currentScore.value;
+				let expScore = expectedScore.value;
+				let dailyTarget = (expScore-curScore)/countdown;
+				document.getElementById("dTarget").innerHTML = dailyTarget.toFixed(0);
+			}
+		</script>
+
+
+	</body>
+</html>
